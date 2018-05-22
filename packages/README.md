@@ -8,18 +8,64 @@ Most of this open-source software can be found in https://github.com/gicentre/li
 - [gicentre/markdown-preview-enhanced-with-litvis](https://github.com/gicentre/markdown-preview-enhanced-with-litvis)
 - [gicentre/vscode-markdown-preview-enhanced-with-litvis](https://github.com/gicentre/vscode-markdown-preview-enhanced-with-litvis)
 
-The easiest way to try litvis is to install an Atom package available at
+## Software dependency diagram
 
-> **https://atom.io/packages/markdown-preview-enhanced-with-litvis**
+```mermaid
+graph TB
+    subgraph gicentre/mume-with-litvis
+    mume-with-litvis-->vega
+    mume-with-litvis-->vega-lite
+    end
 
-Alternatively, you can install a Visual Studio Code extension from
+    subgraph gicentre/litvis
+    litvis-integration-mume-->litvis
+    mume-with-litvis-->litvis-integration-mume
+    litvis-->literate-elm
+    litvis-->block-attributes
+    litvis-->data-with-position
+    litvis-->block-info
+    block-info-->block-attributes
+    litvis-->narrative-schema
+    litvis-->narrative-schema-label
+    literate-elm-->elm-string-representation
 
-> **https://marketplace.visualstudio.com/items?itemName=gicentre.markdown-preview-enhanced-with-litvis**
+    litvis-integration-mume-->block-attributes
+    litvis-integration-mume-->block-info
+
+    litvis-integration-mume-->narrative-schema
+    litvis-integration-mume-->narrative-schema-label
+    litvis-integration-mume-->narrative-schema-rule
+    litvis-integration-mume-->narrative-schema-styling
+
+    narrative-schema-->narrative-schema-common
+    narrative-schema-->narrative-schema-label
+    narrative-schema-->narrative-schema-rule
+    narrative-schema-->narrative-schema-styling
+
+    narrative-schema-label-->narrative-schema-common
+    narrative-schema-rule-->narrative-schema-common
+    narrative-schema-styling-->narrative-schema-common
+    end
+
+    subgraph kachkaev/run-elm
+    literate-elm-->run-elm["@kachkaev/run-elm (run-elm fork)"]
+    end
+
+    run-elm-->elm-make
+
+    subgraph gicentre/mume-with-litvis
+    vscode[MPE for VSCode]-->mume-with-litvis
+    end
+
+    subgraph gicentre/mume-with-litvis
+    atom[MPE for Atom]-->mume-with-litvis
+    end
+```
 
 ## Development
 
-Litvis code is organised in a form of a _monorepo_ and relies on [`yarn` workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) for package management.
-It also uses `lerna` for orchestrating packages in the monorepo.
+The core packages in the litvis ecosystem are organised in a form of a _monorepo_ (a single git repository where multiple npm packages are co-located).
+This repository uses [`yarn` workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) for common dependency management and `lerna` for orchestrating `package.json` scripts and for publishing to npm.
 
 Before getting started, please make sure you have the latest `node` and the latest `yarn` installed on your machine.
 
